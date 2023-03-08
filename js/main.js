@@ -12,10 +12,10 @@ const NIZFooterMaterijalHref = ["js/main.js", "#", "#", "https://github.com/Bogd
 var proizvodi = [];
 window.onload = function() {
     ispisivanjeNavigacije();
-    if (window.location.pathname === "/index.html" || window.location.pathname === "/") {
+    if (window.location.pathname === "/byzartstamparija/index.html" || window.location.pathname === "/") {
         ucitajPocetnu();
     }
-    else if(window.location.pathname === "/proizvodi.html") {
+    else if(window.location.pathname === "/byzartstamparija/proizvodi.html") {
         ajaxZahtev("tipStampe.json", function(rezultat){
             napraviCHBL(rezultat, "#tip-stampe", "tipStampe");
         })
@@ -37,27 +37,30 @@ window.onload = function() {
             let nizCheckedTipStampe = this.querySelectorAll('input[type="checkbox"][name="tipStampe"]:checked');
 
             nizCheckedKategorije.forEach (input => {
-                nizKategorijeValue.push(input.value);
+                nizKategorijeValue.push(Number(input.value));
             })
             nizCheckedTipStampe.forEach (input => {
-                nizTipStampeValue.push(input.value);
+                nizTipStampeValue.push(Number(input.value));
             })
 
             console.log(nizKategorijeValue);
-            if(nizCheckedKategorije.length == 0 && nizCheckedTipStampe.length==0) {
+            if(nizKategorijeValue.length == 0 && nizTipStampeValue.length==0) {
                 ispisiProizvode(proizvodi)
             }
-            else {
+            if(nizKategorijeValue != null || nizTipStampeValue != null) {
                 let proizvodiFiltrirani = [];
-                for(let proizvod of proizvodi) {
-                    for(let i=0; i<nizCheckedKategorije.length;i++) {
-                        if(proizvod.kategorija == nizCheckedKategorije[i].value) {
-                            proizvodiFiltrirani.push(proizvod);
-                        }
-                    }           
-                }
+                proizvodiFiltrirani = proizvodi.filter(proizvod => nizKategorijeValue.includes(proizvod.kategorija))
                 ispisiProizvode(proizvodiFiltrirani);
             }
+            // else {
+            //     for(let proizvod of proizvodi) {
+            //         for(let i=0; i<nizCheckedKategorije.length;i++) {
+            //             if(proizvod.kategorija == nizCheckedKategorije[i].value) {
+            //                 proizvodiFiltrirani.push(proizvod);
+            //             }
+            //         }           
+            //     }
+            // }
         })
     
     }   
